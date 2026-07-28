@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Extra Mile — We build it. You pay when it starts paying.</title>
+<meta name="description" content="Extra Mile builds the software and automation your small business is missing. You pay nothing to build it. You start paying once it produces results." />
+<style>
+/* ============================================================
+   EXTRA MILE — "The Ledger"
+   Identity: work-truck / invoice / road signage.
+   Mono carries structure + numbers. Grotesque carries the voice.
+   ============================================================ */
+
+:root {
+  --ground:      #EDEEE9;
+  --panel:       #F8F8F5;
+  --panel-2:     #E3E5DE;
+  --ink:         #16181A;
+  --ink-2:       #575C57;
+  --ink-3:       #83887F;
+  --rule:        #D2D4CC;
+  --rule-strong: #B4B8AE;
+  --accent:      #C63F16;
+  --accent-ink:  #FFF6F2;
+  --accent-soft: #F6DDD2;
+  --paid:        #1E6B4A;
+  --paid-soft:   #D8E8DF;
+  --shadow:      0 1px 0 var(--rule-strong);
+
+  /* the closing block flips the page over — its own tokens, not swapped ink/ground */
+  --invert-bg:     #16181A;
+  --invert-fg:     #EDEEE9;
+  --invert-muted:  #B9BDB6;
+  --invert-accent: #FF6A3D;
+  --invert-line:   rgba(255, 255, 255, .28);
+  --invert-hover:  rgba(255, 255, 255, .09);
+
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --measure: 62ch;
+  --rail: 8.5rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground:      #121413;
+    --panel:       #1A1D1B;
+    --panel-2:     #232724;
+    --ink:         #ECEEE9;
+    --ink-2:       #A2A89F;
+    --ink-3:       #7C837A;
+    --rule:        #2C302D;
+    --rule-strong: #3C423D;
+    --accent:      #FF6A3D;
+    --accent-ink:  #1A0B05;
+    --accent-soft: #382016;
+    --paid:        #4FBF8B;
+    --paid-soft:   #172E25;
+    --shadow:      0 1px 0 var(--rule);
+    --invert-bg:     #E9EAE4;
+    --invert-fg:     #16181A;
+    --invert-muted:  #4E534E;
+    --invert-accent: #C63F16;
+    --invert-line:   rgba(0, 0, 0, .28);
+    --invert-hover:  rgba(0, 0, 0, .07);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:      #121413;
+  --panel:       #1A1D1B;
+  --panel-2:     #232724;
+  --ink:         #ECEEE9;
+  --ink-2:       #A2A89F;
+  --ink-3:       #7C837A;
+  --rule:        #2C302D;
+  --rule-strong: #3C423D;
+  --accent:      #FF6A3D;
+  --accent-ink:  #1A0B05;
+  --accent-soft: #382016;
+  --paid:        #4FBF8B;
+  --paid-soft:   #172E25;
+  --shadow:      0 1px 0 var(--rule);
+  --invert-bg:     #E9EAE4;
+  --invert-fg:     #16181A;
+  --invert-muted:  #4E534E;
+  --invert-accent: #C63F16;
+  --invert-line:   rgba(0, 0, 0, .28);
+  --invert-hover:  rgba(0, 0, 0, .07);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --ground:      #EDEEE9;
+  --panel:       #F8F8F5;
+  --panel-2:     #E3E5DE;
+  --ink:         #16181A;
+  --ink-2:       #575C57;
+  --ink-3:       #83887F;
+  --rule:        #D2D4CC;
+  --rule-strong: #B4B8AE;
+  --accent:      #C63F16;
+  --accent-ink:  #FFF6F2;
+  --accent-soft: #F6DDD2;
+  --paid:        #1E6B4A;
+  --paid-soft:   #D8E8DF;
+  --shadow:      0 1px 0 var(--rule-strong);
+  --invert-bg:     #16181A;
+  --invert-fg:     #EDEEE9;
+  --invert-muted:  #B9BDB6;
+  --invert-accent: #FF6A3D;
+  --invert-line:   rgba(255, 255, 255, .28);
+  --invert-hover:  rgba(255, 255, 255, .09);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3 { text-wrap: balance; margin: 0; letter-spacing: -0.035em; line-height: 1.02; font-weight: 800; }
+p { margin: 0; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--ink); color: var(--ground);
+  padding: .75rem 1rem; z-index: 50;
+  font-family: var(--mono); font-size: .75rem;
+}
+.skip:focus { left: 0; }
+
+/* ---------- shared bits ---------- */
+
+.wrap {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.key {
+  font-family: var(--mono);
+  font-size: .6875rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.lede {
+  max-width: var(--measure);
+  color: var(--ink-2);
+  font-size: 1.125rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: var(--mono);
+  font-size: .8125rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: .95rem 1.35rem;
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--ground);
+  transition: transform .12s ease, background-color .12s ease, color .12s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn--go { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn--quiet { background: transparent; color: var(--ink); }
+.btn--quiet:hover { background: var(--panel); }
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  border-bottom: 1.5px solid var(--ink);
+  background: var(--ground);
+  position: sticky; top: 0; z-index: 20;
+}
+.masthead__in {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; min-height: 4.25rem;
+}
+.mark {
+  display: flex; align-items: baseline; gap: .6rem;
+  text-decoration: none;
+}
+.mark__name {
+  font-weight: 800; letter-spacing: -0.04em; font-size: 1.3rem;
+  white-space: nowrap;
+}
+.mark__rule {
+  display: none;
+  font-family: var(--mono); font-size: .625rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent);
+}
+@media (min-width: 46rem) { .mark__rule { display: inline; } }
+.masthead .btn { padding: .7rem 1rem; white-space: nowrap; }
+@media (max-width: 24rem) { .masthead .btn { font-size: .6875rem; padding: .65rem .8rem; } }
+.masthead__links { display: none; gap: 1.75rem; }
+.masthead__links a {
+  font-family: var(--mono); font-size: .75rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-2); text-decoration: none;
+}
+.masthead__links a:hover { color: var(--accent); }
+@media (min-width: 60rem) { .masthead__links { display: flex; } }
+
+/* ---------- section scaffolding (the ledger grid) ---------- */
+
+.band { border-bottom: 1.5px solid var(--ink); }
+.band__in { padding-block: clamp(3.5rem, 7vw, 6rem); }
+
+.split {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+}
+@media (min-width: 60rem) {
+  .split { grid-template-columns: var(--rail) 1fr; align-items: start; }
+  .split__rail { position: sticky; top: 6rem; }
+}
+.split__rail { display: flex; flex-direction: column; gap: .5rem; }
+.split__rail .num {
+  font-family: var(--mono); font-size: 2rem; font-weight: 700;
+  color: var(--accent); line-height: 1; letter-spacing: -0.02em;
+}
+
+.head { font-size: clamp(1.9rem, 4.4vw, 3rem); max-width: 20ch; }
+.stack { display: flex; flex-direction: column; gap: 1.25rem; }
+.stack--wide { gap: 2.25rem; }
+
+/* ---------- hero ---------- */
+
+.hero__in {
+  display: grid;
+  gap: clamp(2.25rem, 5vw, 4rem);
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+@media (min-width: 64rem) {
+  .hero__in { grid-template-columns: 1.15fr .85fr; align-items: center; }
+}
+.hero h1 {
+  font-size: clamp(2.6rem, 7.4vw, 5rem);
+  max-width: 14ch;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+  display: block;
+}
+.hero__flag {
+  display: inline-flex; align-items: center; gap: .55rem;
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink);
+  border: 1.5px solid var(--ink); padding: .4rem .7rem; width: fit-content;
+}
+.hero__flag::before {
+  content: ""; width: .5rem; height: .5rem; background: var(--accent);
+}
+.hero__cta { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+@media (max-width: 34rem) {
+  .hero__cta .btn { flex: 1 1 11rem; justify-content: center; }
+}
+.hero__note {
+  font-family: var(--mono); font-size: .75rem; color: var(--ink-3);
+  letter-spacing: .04em;
+}
+
+/* statement of account card */
+.statement {
+  border: 1.5px solid var(--ink);
+  background: var(--panel);
+  box-shadow: 10px 10px 0 var(--panel-2);
+}
+.statement__top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 1rem; padding: .85rem 1.15rem;
+  border-bottom: 1.5px solid var(--ink);
+  background: var(--ink); color: var(--ground);
+  font-family: var(--mono); font-size: .6875rem;
+  letter-spacing: .16em; text-transform: uppercase;
+}
+.statement__body { padding: 1.15rem; display: flex; flex-direction: column; gap: .1rem; }
+
+.line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: .5rem;
+  padding-block: .55rem;
+  font-family: var(--mono);
+  font-size: .8125rem;
+}
+.line + .line { border-top: 1px dotted var(--rule-strong); }
+.line__what { color: var(--ink-2); }
+.line__amt { font-weight: 700; }
+.line--void .line__amt { color: var(--paid); }
+.line--void .line__what { text-decoration: line-through; text-decoration-color: var(--rule-strong); }
+
+.statement__total {
+  border-top: 1.5px solid var(--ink);
+  margin-top: .65rem; padding-top: .9rem;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+}
+.statement__total .key { color: var(--ink); }
+.statement__figure {
+  font-family: var(--mono); font-weight: 700;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  letter-spacing: -0.04em; line-height: 1;
+}
+.statement__foot {
+  padding: .8rem 1.15rem;
+  border-top: 1.5px solid var(--ink);
+  background: var(--accent-soft);
+  font-family: var(--mono); font-size: .6875rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink);
+}
+
+/* ---------- terms strip ---------- */
+
+.terms {
+  display: grid; gap: 0;
+  border-top: 0;
+}
+@media (min-width: 48rem) { .terms { grid-template-columns: repeat(3, 1fr); } }
+.term {
+  padding: clamp(1.5rem, 3.5vw, 2.25rem) var(--gutter);
+  display: flex; flex-direction: column; gap: .5rem;
+  border-bottom: 1.5px solid var(--rule);
+}
+@media (min-width: 48rem) {
+  .term { border-bottom: 0; border-right: 1.5px solid var(--rule); }
+  .term:last-child { border-right: 0; }
+}
+.term__fig {
+  font-family: var(--mono); font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, 2.4rem); letter-spacing: -0.04em; line-height: 1;
+}
+.term__txt { font-size: .9375rem; color: var(--ink-2); max-width: 30ch; }
+
+/* ---------- two-column contrast ---------- */
+
+.versus { display: grid; gap: 1.25rem; }
+@media (min-width: 48rem) { .versus { grid-template-columns: 1fr 1fr; gap: 1.5rem; } }
+
+.card {
+  border: 1.5px solid var(--rule-strong);
+  background: var(--panel);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  display: flex; flex-direction: column; gap: .9rem;
+}
+.card--ours { border-color: var(--ink); box-shadow: 8px 8px 0 var(--accent-soft); }
+.card h3 { font-size: 1.25rem; letter-spacing: -0.02em; }
+.card ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+.card li {
+  display: grid; grid-template-columns: 1.25rem 1fr; gap: .6rem;
+  font-size: .9375rem; color: var(--ink-2); line-height: 1.5;
+}
+.card li::before {
+  content: "×"; font-family: var(--mono); color: var(--ink-3);
+  font-size: 1rem; line-height: 1.4;
+}
+.card--ours li::before { content: "→"; color: var(--accent); }
+
+/* ---------- steps ---------- */
+
+.steps { display: flex; flex-direction: column; }
+.step {
+  display: grid; gap: .35rem 1.5rem;
+  padding-block: 1.6rem;
+  border-top: 1.5px solid var(--rule);
+  align-items: start;
+}
+.step:first-child { border-top: 0; padding-top: 0; }
+@media (min-width: 48rem) {
+  .step { grid-template-columns: 4.5rem 1fr 12rem; }
+}
+.step__n {
+  font-family: var(--mono); font-size: .75rem; letter-spacing: .14em;
+  color: var(--accent); padding-top: .35rem;
+}
+.step h3 { font-size: 1.35rem; letter-spacing: -0.025em; margin-bottom: .4rem; }
+.step p { color: var(--ink-2); font-size: .9688rem; max-width: 52ch; }
+.step__when {
+  font-family: var(--mono); font-size: .75rem; color: var(--ink-3);
+  letter-spacing: .04em; padding-top: .4rem;
+}
+@media (min-width: 48rem) { .step__when { text-align: right; } }
+
+/* ---------- builds ---------- */
+
+.builds { display: grid; gap: 1.25rem; }
+@media (min-width: 44rem) { .builds { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 68rem) { .builds { grid-template-columns: repeat(3, 1fr); } }
+
+.build {
+  border: 1.5px solid var(--rule-strong);
+  background: var(--panel);
+  padding: 1.35rem;
+  display: flex; flex-direction: column; gap: .6rem;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.build:hover { border-color: var(--ink); transform: translateY(-3px); }
+.build h3 { font-size: 1.0625rem; letter-spacing: -0.02em; }
+.build p { font-size: .9375rem; color: var(--ink-2); }
+.build__metric {
+  margin-top: auto; padding-top: .9rem; border-top: 1px dotted var(--rule-strong);
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.build__metric b { color: var(--accent); font-weight: 700; }
+
+/* ---------- price ledger ---------- */
+
+.tiers { display: flex; flex-direction: column; }
+.tier {
+  display: grid; gap: .5rem 1.5rem;
+  padding-block: 1.75rem;
+  border-top: 1.5px solid var(--rule);
+}
+.tier:first-child { border-top: 0; padding-top: 0; }
+@media (min-width: 52rem) {
+  .tier { grid-template-columns: 1fr auto; align-items: start; }
+}
+.tier h3 { font-size: 1.5rem; letter-spacing: -0.03em; margin-bottom: .5rem; }
+.tier p { color: var(--ink-2); font-size: .9688rem; max-width: 54ch; }
+.tier__price {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 1.75rem; letter-spacing: -0.03em; line-height: 1.1;
+}
+@media (min-width: 52rem) { .tier__price { text-align: right; } }
+.tier__price small {
+  display: block; font-size: .6875rem; font-weight: 400;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
+  margin-top: .35rem;
+}
+.tier--free .tier__price { color: var(--paid); }
+
+.tag {
+  display: inline-block;
+  font-family: var(--mono); font-size: .625rem; letter-spacing: .14em;
+  text-transform: uppercase; padding: .25rem .5rem;
+  background: var(--paid-soft); color: var(--paid);
+  margin-bottom: .6rem;
+}
+
+/* ---------- fit lists ---------- */
+
+.fit { display: grid; gap: 1.5rem; }
+@media (min-width: 48rem) { .fit { grid-template-columns: 1fr 1fr; gap: 2.5rem; } }
+.fit ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.fit li {
+  padding-block: .8rem; border-top: 1px dotted var(--rule-strong);
+  font-size: .9688rem; color: var(--ink-2);
+}
+.fit li:first-child { border-top: 0; }
+
+/* ---------- faq ---------- */
+
+.faq { display: flex; flex-direction: column; }
+.faq details { border-top: 1.5px solid var(--rule); }
+.faq details:first-of-type { border-top: 0; }
+.faq summary {
+  cursor: pointer; list-style: none;
+  padding-block: 1.15rem;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem;
+  font-weight: 700; font-size: 1.0625rem; letter-spacing: -0.015em;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+"; font-family: var(--mono); font-weight: 400;
+  color: var(--accent); font-size: 1.25rem; line-height: 1;
+}
+.faq details[open] summary::after { content: "–"; }
+.faq p { padding-bottom: 1.25rem; color: var(--ink-2); max-width: var(--measure); font-size: .9688rem; }
+
+/* ---------- closing ---------- */
+
+.close { background: var(--invert-bg); color: var(--invert-fg); }
+.close .key { color: var(--invert-accent); }
+.close h2 { font-size: clamp(2.1rem, 5.5vw, 3.6rem); max-width: 16ch; }
+.close p { color: var(--invert-muted); max-width: 46ch; }
+.close .btn--quiet { color: var(--invert-fg); border-color: var(--invert-fg); }
+.close .btn--quiet:hover { background: var(--invert-hover); }
+.close__in {
+  display: grid; gap: 2rem; padding-block: clamp(3.5rem, 8vw, 6rem);
+}
+@media (min-width: 60rem) { .close__in { grid-template-columns: 1.1fr .9fr; align-items: end; } }
+
+.contact { display: flex; flex-direction: column; gap: .75rem; }
+.contact a {
+  font-family: var(--mono); font-size: .875rem; letter-spacing: .04em;
+  text-decoration: none; border-bottom: 1px solid var(--invert-line);
+  padding-bottom: .3rem; width: fit-content;
+}
+.contact a:hover { border-color: var(--invert-accent); color: var(--invert-accent); }
+
+/* ---------- footer ---------- */
+
+.foot__in {
+  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;
+  align-items: center; padding-block: 1.5rem;
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+
+/* ---------- motion ---------- */
+
+.rise { opacity: 0; transform: translateY(14px); }
+.rise.in { opacity: 1; transform: none; transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.3,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .rise.in { opacity: 1; transform: none; transition: none; }
+  .btn:hover, .build:hover { transform: none; }
+  * { animation: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="wrap masthead__in">
+    <a class="mark" href="#top">
+      <span class="mark__name">Extra Mile</span>
+      <span class="mark__rule">Build first · Bill later</span>
+    </a>
+    <nav class="masthead__links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#builds">What we build</a>
+      <a href="#price">What it costs</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <a class="btn btn--go" href="#book">Book a 30-min look</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="band hero" id="top">
+    <div class="wrap hero__in">
+      <div class="stack">
+        <p class="hero__flag">No invoice until it works</p>
+        <h1>We build the thing.<em>You pay when it starts paying.</em></h1>
+        <p class="lede">Extra Mile builds the software your small business keeps meaning to get around to — the missed-call catcher, the quote follow-up, the booking flow, the reporting you do by hand every Friday. We build it first, at our cost. You only start paying once it's live and producing.</p>
+        <div class="hero__cta">
+          <a class="btn btn--go" href="#book">Book a 30-min look</a>
+          <a class="btn btn--quiet" href="#how">See how it works</a>
+        </div>
+        <p class="hero__note">30 minutes. No deck. We'll tell you on the call whether we can help.</p>
+      </div>
+
+      <aside class="statement" aria-label="Sample statement of account">
+        <div class="statement__top">
+          <span>Statement of account</span>
+          <span>Day 001</span>
+        </div>
+        <div class="statement__body">
+          <div class="line line--void">
+            <span class="line__what">Discovery &amp; scoping</span>
+            <span class="line__amt">$0.00</span>
+          </div>
+          <div class="line line--void">
+            <span class="line__what">Design &amp; build</span>
+            <span class="line__amt">$0.00</span>
+          </div>
+          <div class="line line--void">
+            <span class="line__what">Setup &amp; integration</span>
+            <span class="line__amt">$0.00</span>
+          </div>
+          <div class="line line--void">
+            <span class="line__what">30-day proof window</span>
+            <span class="line__amt">$0.00</span>
+          </div>
+          <div class="line">
+            <span class="line__what">Monthly — starts when it works</span>
+            <span class="line__amt">Then</span>
+          </div>
+          <div class="statement__total">
+            <p class="key">Due today</p>
+            <p class="statement__figure" id="figure" data-from="8400">$0.00</p>
+          </div>
+        </div>
+        <p class="statement__foot">Risk sits on our side of the table</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ TERMS ============ -->
+  <section class="band" aria-label="The terms in short">
+    <div class="terms">
+      <div class="term">
+        <p class="key">Up front</p>
+        <p class="term__fig">$0</p>
+        <p class="term__txt">No deposit, no discovery fee, no retainer while we build.</p>
+      </div>
+      <div class="term">
+        <p class="key">Proof window</p>
+        <p class="term__fig">30 days</p>
+        <p class="term__txt">It runs in your business against the numbers you had before we showed up.</p>
+      </div>
+      <div class="term">
+        <p class="key">What we're judged on</p>
+        <p class="term__fig">1 number</p>
+        <p class="term__txt">We agree on it in writing before a line of code gets written.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE PROBLEM ============ -->
+  <section class="band">
+    <div class="wrap band__in split">
+      <div class="split__rail">
+        <span class="num">01</span>
+        <p class="key">The problem</p>
+      </div>
+      <div class="stack stack--wide">
+        <h2 class="head">Everyone else gets paid whether it works or not.</h2>
+        <p class="lede">The way agencies charge is the reason small businesses stop hiring them. You pay for hours, decks, and discovery phases — and the thing either lands or it doesn't, but the invoice arrives either way. We took the invoice off the front end. If what we build doesn't move your number, that's our loss to eat, not yours.</p>
+        <div class="versus rise">
+          <div class="card">
+            <p class="key">The usual arrangement</p>
+            <h3>You buy the effort</h3>
+            <ul>
+              <li>$5–15k deposit before anything exists</li>
+              <li>Billed by the hour, so slow work pays better</li>
+              <li>Six weeks of discovery you paid to sit through</li>
+              <li>Handed a login and wished good luck</li>
+              <li>Results are "outside the scope of engagement"</li>
+            </ul>
+          </div>
+          <div class="card card--ours">
+            <p class="key">Extra Mile</p>
+            <h3>You buy the outcome</h3>
+            <ul>
+              <li>Nothing changes hands until it's live and working</li>
+              <li>One number, agreed in writing, that we're measured on</li>
+              <li>Built in two to three weeks, not two quarters</li>
+              <li>We run it, watch it, and fix it while it's live</li>
+              <li>If the number doesn't move, you don't pay and we turn it off</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="band" id="how">
+    <div class="wrap band__in split">
+      <div class="split__rail">
+        <span class="num">02</span>
+        <p class="key">How it works</p>
+      </div>
+      <div class="stack stack--wide">
+        <h2 class="head">Four steps. You're only exposed on the last one.</h2>
+        <div class="steps rise">
+          <article class="step">
+            <p class="step__n">STEP 1</p>
+            <div>
+              <h3>We find where the money is leaking</h3>
+              <p>A 30-minute call and a look at how work actually moves through your business — the calls nobody picks up, the quotes that never get chased, the hour you spend retyping the same thing. We come back with the one fix worth building first.</p>
+            </div>
+            <p class="step__when">Week 0 · Free</p>
+          </article>
+          <article class="step">
+            <p class="step__n">STEP 2</p>
+            <div>
+              <h3>We agree on the number</h3>
+              <p>Before anything gets built, we write down what success is: booked jobs per week, quotes answered inside an hour, hours off your Friday. Plus your baseline today. One page, both signatures, no interpretation later.</p>
+            </div>
+            <p class="step__when">Week 0 · Free</p>
+          </article>
+          <article class="step">
+            <p class="step__n">STEP 3</p>
+            <div>
+              <h3>We build it and put it live</h3>
+              <p>Two to three weeks, on our clock and our cost. It plugs into what you already use — your phone, your calendar, your inbox, your point of sale. You don't learn a new system, and you don't get a bill.</p>
+            </div>
+            <p class="step__when">Weeks 1–3 · $0</p>
+          </article>
+          <article class="step">
+            <p class="step__n">STEP 4</p>
+            <div>
+              <h3>It runs for 30 days, then you decide</h3>
+              <p>We watch it in your business against your baseline. Hit the number and you start paying a flat monthly fee — no surprise line items. Miss it and you owe nothing; we shut it off or keep going at our expense until it lands.</p>
+            </div>
+            <p class="step__when">Days 30+ · You choose</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT WE BUILD ============ -->
+  <section class="band" id="builds">
+    <div class="wrap band__in split">
+      <div class="split__rail">
+        <span class="num">03</span>
+        <p class="key">What we build</p>
+      </div>
+      <div class="stack stack--wide">
+        <h2 class="head">Unglamorous software that pays for itself.</h2>
+        <p class="lede">Every build below is tied to a number we can measure in your own accounts. If we can't name that number, we don't take the job.</p>
+        <div class="builds rise">
+          <article class="build">
+            <h3>Missed-call catcher</h3>
+            <p>Every call you can't get to gets a text back in seconds, asks what they need, and drops it on your schedule instead of your competitor's.</p>
+            <p class="build__metric">Judged on <b>jobs booked from missed calls</b></p>
+          </article>
+          <article class="build">
+            <h3>Quote follow-up that doesn't forget</h3>
+            <p>Quotes go out faster and chase themselves on a schedule you set, until the customer answers yes or no.</p>
+            <p class="build__metric">Judged on <b>quote-to-job conversion</b></p>
+          </article>
+          <article class="build">
+            <h3>Booking without the phone tag</h3>
+            <p>Customers book real slots against your actual availability, with reminders that cut no-shows.</p>
+            <p class="build__metric">Judged on <b>filled slots per week</b></p>
+          </article>
+          <article class="build">
+            <h3>Review engine</h3>
+            <p>The right ask, to the right customer, at the right moment after the job — so your search results stop being an accident.</p>
+            <p class="build__metric">Judged on <b>new reviews per month</b></p>
+          </article>
+          <article class="build">
+            <h3>The Friday afternoon killer</h3>
+            <p>The spreadsheet you rebuild by hand every week — invoicing, payroll prep, stock counts, job costing — done automatically and waiting for you.</p>
+            <p class="build__metric">Judged on <b>admin hours returned</b></p>
+          </article>
+          <article class="build">
+            <h3>A site that actually sells</h3>
+            <p>Not a brochure. A page built around the one action you want, wired to your booking and your phone, and measured like a salesperson.</p>
+            <p class="build__metric">Judged on <b>enquiries per 100 visitors</b></p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICE ============ -->
+  <section class="band" id="price">
+    <div class="wrap band__in split">
+      <div class="split__rail">
+        <span class="num">04</span>
+        <p class="key">What it costs</p>
+      </div>
+      <div class="stack stack--wide">
+        <h2 class="head">Nothing, then something reasonable.</h2>
+        <div class="tiers rise">
+          <article class="tier tier--free">
+            <div>
+              <p class="tag">Always free</p>
+              <h3>The look</h3>
+              <p>Thirty minutes on the phone, a walk through how your work actually flows, and a written recommendation of the first thing worth building. Yours to keep, whether you hire us or not.</p>
+            </div>
+            <p class="tier__price">$0<small>No card, no catch</small></p>
+          </article>
+          <article class="tier tier--free">
+            <div>
+              <p class="tag">Always free</p>
+              <h3>The build &amp; the proof window</h3>
+              <p>We design it, build it, integrate it with what you already run, and keep it alive for the first 30 days while we measure it against your baseline. Our cost, our risk.</p>
+            </div>
+            <p class="tier__price">$0<small>Until it produces</small></p>
+          </article>
+          <article class="tier">
+            <div>
+              <h3>Once it's working</h3>
+              <p>A flat monthly fee that covers hosting, monitoring, fixes, and the improvements we keep making. It's set against what the build is worth to you, and it starts the month after it hits the number — never before.</p>
+            </div>
+            <p class="tier__price">from $490<small>Per month · cancel any time</small></p>
+          </article>
+          <article class="tier">
+            <div>
+              <h3>Everything after that</h3>
+              <p>Most owners come back with a second thing once the first one pays. Same arrangement every time: we build it free, it proves itself, then it joins your monthly.</p>
+            </div>
+            <p class="tier__price">Same deal<small>Build free · prove · then pay</small></p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FIT ============ -->
+  <section class="band">
+    <div class="wrap band__in split">
+      <div class="split__rail">
+        <span class="num">05</span>
+        <p class="key">The fit</p>
+      </div>
+      <div class="stack stack--wide">
+        <h2 class="head">We say no to most of the businesses we speak to.</h2>
+        <p class="lede">Building for free only works if the thing genuinely pays off. So we're picky up front, and we'd rather tell you on the first call than six weeks in.</p>
+        <div class="fit rise">
+          <div class="stack">
+            <p class="key">Good fit</p>
+            <ul>
+              <li>You're doing real revenue and the bottleneck is time, not demand</li>
+              <li>Something repetitive eats hours every single week</li>
+              <li>You can name a number that would change your year</li>
+              <li>Someone on your side can answer questions for an hour a week</li>
+              <li>You'd keep a tool that worked, and pay for it happily</li>
+            </ul>
+          </div>
+          <div class="stack">
+            <p class="key">Bad fit</p>
+            <ul>
+              <li>You want a logo, a brand book, or a rebrand</li>
+              <li>The problem is that nobody knows you exist yet</li>
+              <li>Success can't be measured in anything but a feeling</li>
+              <li>You need it live next Tuesday</li>
+              <li>You want the code handed over and the relationship ended</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band" id="faq">
+    <div class="wrap band__in split">
+      <div class="split__rail">
+        <span class="num">06</span>
+        <p class="key">Questions</p>
+      </div>
+      <div class="stack stack--wide">
+        <h2 class="head">The things owners ask on the first call.</h2>
+        <div class="faq rise">
+          <details>
+            <summary>What's the catch?</summary>
+            <p>We're betting that we can build something that works, and we're pricing that bet ourselves. That means we turn down jobs where we can't see the payoff clearly, and we're strict about agreeing on the number before we start. If we take your job on, it's because we expect to get paid.</p>
+          </details>
+          <details>
+            <summary>Who decides whether it worked?</summary>
+            <p>The number does. We write down your baseline before we start and measure the same thing 30 days after go-live, out of your own systems — your call logs, your calendar, your books. No interpretation, no argument.</p>
+          </details>
+          <details>
+            <summary>What if it doesn't hit the number?</summary>
+            <p>You owe nothing. You tell us to switch it off, or you let us keep working on it at our expense until it lands. Your call, either way.</p>
+          </details>
+          <details>
+            <summary>How long does a build take?</summary>
+            <p>Two to three weeks for the first one, from the day we agree on scope. Bigger builds get split so something useful is live inside three weeks, rather than everything arriving in month four.</p>
+          </details>
+          <details>
+            <summary>Do I have to change the systems I already use?</summary>
+            <p>No. We build around your phone, your calendar, your inbox and your point of sale. If your team has to learn a new system to get the benefit, we've built the wrong thing.</p>
+          </details>
+          <details>
+            <summary>What happens if I stop paying?</summary>
+            <p>The monthly is cancellable any time with 30 days' notice. We shut things down gracefully and export your data — no hostage-taking, no exit fee.</p>
+          </details>
+          <details>
+            <summary>Who actually does the work?</summary>
+            <p>The person you meet on the first call is the person who builds it. There's no account manager between you and the work, and nothing gets passed to a junior team you never met.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSE ============ -->
+  <section class="band close" id="book">
+    <div class="wrap close__in">
+      <div class="stack">
+        <p class="key">Start here</p>
+        <h2>Thirty minutes, and you'll know if there's anything worth building.</h2>
+        <p>Bring one thing that wastes your week. We'll tell you straight whether we can fix it, what it'd take, and what number we'd be judged on. If there's nothing there, we'll say so and you'll have lost half an hour.</p>
+      </div>
+      <div class="stack">
+        <div class="hero__cta">
+          <a class="btn btn--go" href="mailto:hello@extramile.example?subject=Booking%20a%2030-minute%20look">Book a 30-min look</a>
+          <a class="btn btn--quiet" href="tel:+10000000000">Or just call</a>
+        </div>
+        <div class="contact">
+          <a href="mailto:hello@extramile.example">hello@extramile.example</a>
+          <a href="tel:+10000000000">+1 (000) 000-0000</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="band foot" style="border-bottom:0;">
+  <div class="wrap foot__in">
+    <span>Extra Mile — build first, bill later</span>
+    <span>© <span id="year">2026</span> Extra Mile</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var y = document.getElementById("year");
+  if (y) { y.textContent = new Date().getFullYear(); }
+
+  /* Statement total counts down from what a build like this normally costs to $0.00 */
+  var fig = document.getElementById("figure");
+  if (fig && !reduced) {
+    var from = parseFloat(fig.getAttribute("data-from")) || 0;
+    var money = function (n) {
+      return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+    var start = null, dur = 1400;
+    fig.textContent = money(from);
+    var tick = function (ts) {
+      if (start === null) { start = ts; }
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      fig.textContent = money(from * (1 - eased));
+      if (p < 1) { requestAnimationFrame(tick); }
+      else { fig.textContent = "$0.00"; }
+    };
+    setTimeout(function () { requestAnimationFrame(tick); }, 350);
+  }
+
+  /* Reveal ledger blocks as they come into view */
+  var targets = document.querySelectorAll(".rise");
+  if (reduced || !("IntersectionObserver" in window)) {
+    targets.forEach(function (el) { el.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+  targets.forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
